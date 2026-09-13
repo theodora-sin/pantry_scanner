@@ -10,21 +10,21 @@ Pantry Scanner is meant to make it easy to keep track of what you have. Point th
 3. The backend reads any printed text on the label using OCR and tries to find an expiry date in it. It also attempt to read a barcode.
 4. Everything is saved to a local database and shown on a dashboard, sorted with the soonest-expiring item at the top
 5. Anything the system couldn't figure out automatically can be filled in by hand through the edit button, use remove button to delete a mistaken or finished item .
-
+![Demo of pressing the button and scanning](images/video.gif)
 ## Component on hardware:
 -- AI thinker ESP32-CAM board 
 -- ESP32-CAM-MB adapter, this is for programming, as the board has no onboard USB
 --push button which capture the trigger
 --status LED
 --resistors and capacitors.
-
+![pcbscreenshot](pcb/WhatsApp Image 2026-08-27 at 12.40.43.jpeg)
 ## Component on Software:
 -- C++ on ESP32-Core
 -- Python on backend, it also run by flask, this allow running without external cloud account, it also use pytesseract for reading text label, pyzbar for barcode decoding, SQLite for storage, and Open food facts API for product lookup when a barcode is successfully reading
 --dashboard:plain HTML /CSS served by Flask (http://localhost:5000/dashboard)
 -- data endpoint: same data in the dashboard, but it is in a raw form, 
-(http://localhost:5000/dashboard)
-
+(http://localhost:5000/items)
+![board screenshot](images/board.jpeg)
 ## SetUp
 ### Backend:
 1. install Tesseract OCR on your computer
@@ -32,7 +32,7 @@ Pantry Scanner is meant to make it easy to keep track of what you have. Point th
 3. Update the tesseract_cmd path near the top of app.py to match where Tesseract installed on your system.
 4. python app.py to start the server on port 5000
 5. Open http://localhost:5000/dashboard in a browser.
-
+![items screenshot](items.jpg)
 ### Hardware:
 1. open the ino.file in arduino IDE
 2. Board "AI thinker ESP32-CAM"
@@ -48,7 +48,8 @@ The expiry column shows the date plus a plain-language description next to it (e
 - Grey italics: no date known yet ("needs review")
 Each row also has Edit(fill in or correct the product name/expiry by
 hand) and Remove(delete the row and its photo) buttons.
-
+![dashboard screenshot](images/dashboard_1.jpg)
+![dashboard screenshot](images/dashboard_2.jpg)
 ## Files:
 ### PCB: 
 This file only contain schematic file due to I already had all the physcial components, so I bypassed the custom PCB phase and built the circuit directly on a prototype board. I create the schematic beforehand simply to map out the connections, ensure the external adapter intergration was correct and keep a clean record of the wiring logic
