@@ -17,14 +17,14 @@ Pantry Scanner is meant to make it easy to keep track of what you have. Point th
 --push button which capture the trigger
 --status LED
 --resistors and capacitors.
-![pcbscreenshot](pcb/WhatsApp Image 2026-08-27 at 12.40.43.jpeg)
+![pcbscreenshot](images/WhatsApp Image 2026-08-27 at 12.40.43.jpeg)
+![board screenshot](images/board.jpeg)
 ## Component on Software:
 -- C++ on ESP32-Core
 -- Python on backend, it also run by flask, this allow running without external cloud account, it also use pytesseract for reading text label, pyzbar for barcode decoding, SQLite for storage, and Open food facts API for product lookup when a barcode is successfully reading
 --dashboard:plain HTML /CSS served by Flask (http://localhost:5000/dashboard)
 -- data endpoint: same data in the dashboard, but it is in a raw form, 
 (http://localhost:5000/items)
-![board screenshot](images/board.jpeg)
 ## SetUp
 ### Backend:
 1. install Tesseract OCR on your computer
@@ -32,7 +32,7 @@ Pantry Scanner is meant to make it easy to keep track of what you have. Point th
 3. Update the tesseract_cmd path near the top of app.py to match where Tesseract installed on your system.
 4. python app.py to start the server on port 5000
 5. Open http://localhost:5000/dashboard in a browser.
-![items screenshot](items.jpg)
+![items screenshot](images/items.jpg)
 ### Hardware:
 1. open the ino.file in arduino IDE
 2. Board "AI thinker ESP32-CAM"
