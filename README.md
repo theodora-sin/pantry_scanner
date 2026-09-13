@@ -17,7 +17,7 @@ Pantry Scanner is meant to make it easy to keep track of what you have. Point th
 --push button which capture the trigger
 --status LED
 --resistors and capacitors.
-![pcbscreenshot](images/WhatsApp Image 2026-08-27 at 12.40.43.jpeg)
+![pcbscreenshot](images/schematic.jpeg)
 ![board screenshot](images/board.jpeg)
 ## Component on Software:
 -- C++ on ESP32-Core
