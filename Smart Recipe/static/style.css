@@ -1,0 +1,66 @@
+body{
+    font-family : sans-serif;
+    max-width:800px;
+    margin:2rem auto;
+    padding:0 16 px;
+}
+h1{font-size: 22px;}
+/*table*/
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+th,td{
+    text-align:left;
+    padding:8px;
+    border-bottom:1px solid #ddd
+}
+/*expiry-date color*/
+.expiring-soon{
+    color:#b91c1c;
+    font-weight:600;
+}
+.expiry-ok{
+    color:#15803d;
+}
+.needs-review{
+    color:#888;
+    font-style:italic;
+}
+/*image*/
+img{
+    height:40px;
+    border-radius:4px;
+}
+/*remove button*/
+.remove-btn{
+    background:#fee2e2;
+    color:#991b1b;
+    border:1px solid #fca5a5;
+    border-radius:4px;
+    padding: 4px 10px;
+    cursor:pointer;
+    font-size:12px;
+}
+.remove-btn:hover{
+    background:#f5c9c9;
+}
+/*edit-button*/
+.edit-btn{
+    background: #dbeafe;
+    color:#1e40af;
+    border:1px solid #93c5fd;
+    border-radius:4px;
+    padding:4px 9px;
+    cursor:pointer;
+    font-size: 14px;
+}
+.edit-btn:hover{
+    background:#bfdbfe;
+}
+.edit-product, .edit-expiry{
+    padding:2px;
+    font-size:15px;
+    width:100%;
+    box-sizing:border-box;
+}

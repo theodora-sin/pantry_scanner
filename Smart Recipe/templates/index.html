@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pantry Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Sorting pantry item, soonest at the top</h1>
+    <table id="items-table">
+        <thead>
+            <tr><th>Photo</th><th>Product</th><th>Expiry</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+        function loadItems() {
+            fetch('/items')
+            .then(function(response){return response.json();})
+            .then(function(items){
+                var tableBody = document.querySelector('#items-table tbody');
+                tableBody.innerHTML = '';
+                var today = new Date();
+ 
+                items.forEach(function(item){
+                    var row = document.createElement('tr');
+                    var expiryText = item.expiry_date_sortable || item.expiry_date_as_read || 'needs review';
+                    var expiryClass = 'needs-review';
+ 
+                    if (item.expiry_date_sortable) {
+                        var daysUntilExpiry = Math.round((new Date(item.expiry_date_sortable) - today) / (1000 * 60 * 60 * 24));
+                        expiryClass = daysUntilExpiry < 7 ? 'expiring-soon' : 'expiry-ok';
+ 
+                        var relativeText;
+                        if (daysUntilExpiry < 0) {
+                            relativeText = 'expired ' + Math.abs(daysUntilExpiry) + ' day' + (Math.abs(daysUntilExpiry) === 1 ? '' : 's') + ' ago';
+                        } else if (daysUntilExpiry === 0) {
+                            relativeText = 'expires today';
+                        } else {
+                            relativeText = 'expires in ' + daysUntilExpiry + ' day' + (daysUntilExpiry === 1 ? '' : 's');
+                        }
+                        expiryText = expiryText + ' (' + relativeText + ')';
+                    }
+ 
+                    var photoFileName = item.photo_path;
+ 
+                    row.innerHTML =
+                        '<td><img src="/photos/' + photoFileName + '"></td>' +
+                        '<td class="product-cell">' + (item.product_name || '(unknown product)') + '</td>' +
+                        '<td class="expiry-cell ' + expiryClass + '" data-raw-date="' + (item.expiry_date_sortable || '') + '">' + expiryText + '</td>' +
+                        '<td>' +
+                            '<button class="edit-btn" data-id="' + item.id + '">Edit</button> ' +
+                            '<button class="remove-btn" data-id="' + item.id + '">Remove</button>' +
+                        '</td>';
+ 
+                    tableBody.appendChild(row);
+                });
+ 
+                document.querySelectorAll('.remove-btn').forEach(function(button){
+                    button.addEventListener('click', function(){
+                        var itemId = button.getAttribute('data-id');
+                        fetch('/items/' + itemId, { method: 'DELETE' })
+                            .then(function(response){ return response.json(); })
+                            .then(function(result){
+                                if (result.success) {
+                                    loadItems();
+                                } else {
+                                    alert('Could not remove item: ' + (result.error || 'unknown error'));
+                                }
+                            });
+                    });
+                });
+ 
+                document.querySelectorAll('.edit-btn').forEach(function(button){
+                    button.addEventListener('click', function(){
+                        var row = button.closest('tr');
+                        var itemId = button.getAttribute('data-id');
+                        var productCell = row.querySelector('.product-cell');
+                        var expiryCell = row.querySelector('.expiry-cell');
+ 
+                        var alreadyEditing = productCell.querySelector('.edit-product') !== null;
+ 
+                        if (!alreadyEditing) {
+                            // First click: switch this row into edit mode
+                            var currentProduct = productCell.textContent.trim();
+                            if (currentProduct === '(unknown product)') currentProduct = '';
+                            var currentExpiry = expiryCell.getAttribute('data-raw-date') || '';
+ 
+                            productCell.innerHTML = '<input type="text" class="edit-product" value="' + currentProduct + '" placeholder="Product name">';
+                            expiryCell.innerHTML = '<input type="date" class="edit-expiry" value="' + currentExpiry + '">';
+ 
+                            button.textContent = 'Save';
+                        } else {
+                            // Second click: actually save
+                            var newProduct = row.querySelector('.edit-product').value;
+                            var newExpiry = row.querySelector('.edit-expiry').value;
+ 
+                            fetch('/items/' + itemId, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    product_name: newProduct,
+                                    expiry_date_sortable: newExpiry || null
+                                })
+                            })
+                            .then(function(response){ return response.json(); })
+                            .then(function(result){
+                                if (result.success) {
+                                    loadItems();
+                                } else {
+                                    alert('Could not save: ' + (result.error || 'unknown error'));
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        }
+ 
+        loadItems();
+    </script>
+</body>
+</html>
+ 
